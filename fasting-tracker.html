@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pulse Fasting</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300;1,9..144,600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f7f5f2;--white:#ffffff;--ink:#1a1614;--ink2:#4a4540;--ink3:#7a7470;--ink4:#aaa09a;
+  --border:#e8e4de;--border2:#d8d4ce;
+  --orange:#e8622a;--ol:#fdf0ea;--om:#f5916a;
+  --amber:#d4853a;--al:#fdf5ea;
+  --green:#2d7d52;--gl:#e8f5ee;
+  --blue:#2d5f8a;--bl:#e8f0f8;
+  --purple:#6b3fa0;--pl:#f0eaf8;
+  --shadow:0 1px 3px rgba(26,22,20,0.06),0 4px 16px rgba(26,22,20,0.06);
+  --shadow-lg:0 2px 8px rgba(26,22,20,0.08),0 12px 40px rgba(26,22,20,0.1);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased}
+nav{background:var(--white);border-bottom:1px solid var(--border);padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:58px;position:sticky;top:0;z-index:100;box-shadow:0 1px 0 var(--border)}
+.brand{font-family:'Fraunces',serif;font-size:21px;font-weight:600;color:var(--ink);letter-spacing:-.5px}.brand span{color:var(--orange)}
+.ntabs{display:flex;gap:2px;background:var(--bg);border:1px solid var(--border);border-radius:11px;padding:3px}
+.ntab{padding:7px 15px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;border:none;background:transparent;color:var(--ink3);transition:all .18s;font-family:'DM Sans',sans-serif;white-space:nowrap}
+.ntab.on{background:var(--white);color:var(--ink);box-shadow:0 1px 5px rgba(26,22,20,.1);font-weight:600}
+.ntab:hover:not(.on){color:var(--ink2)}
+.view{display:none;padding:24px;max-width:1100px;margin:0 auto}.view.on{display:block}
+/* LIVE */
+.lg{display:grid;grid-template-columns:330px 1fr;gap:18px;align-items:start}
+.oc{background:var(--white);border-radius:22px;box-shadow:var(--shadow);overflow:hidden;position:relative}
+.och{display:flex;align-items:center;justify-content:space-between;padding:18px 20px 0}
+.lbadge{display:inline-flex;align-items:center;gap:5px;background:var(--gl);color:var(--green);font-size:10px;font-weight:700;letter-spacing:.5px;padding:4px 10px;border-radius:99px}
+.ldot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:ld 1.5s ease-in-out infinite}
+@keyframes ld{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.75)}}
+.snum{font-size:11px;font-weight:600;color:var(--ink4);letter-spacing:.3px}
+.occ{padding:22px 20px 0;display:flex;flex-direction:column;align-items:center}
+.orw{position:relative;width:188px;height:188px;margin-bottom:18px}
+.rsvg{width:188px;height:188px;transform:rotate(-90deg)}
+.rtrack{fill:none;stroke:var(--border);stroke-width:10}
+.rstage{fill:none;stroke-width:10;stroke-linecap:round;transition:stroke-dashoffset 1.2s cubic-bezier(.4,0,.2,1),stroke .6s}
+.rgoal{fill:none;stroke-width:4;stroke-linecap:round;transition:stroke-dashoffset 1.2s cubic-bezier(.4,0,.2,1);opacity:.4}
+.ori{position:absolute;inset:18px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:background .6s;border:1px solid var(--border)}
+.oem{font-size:26px;line-height:1;margin-bottom:4px}
+.ohms{font-family:'Fraunces',serif;font-size:30px;font-weight:300;color:var(--ink);letter-spacing:-1px;line-height:1}
+.osub{font-size:9px;font-weight:600;color:var(--ink4);letter-spacing:1.5px;text-transform:uppercase;margin-top:3px}
+.osn{font-size:11px;font-weight:600;margin-top:5px;transition:color .5s}
+.strow{text-align:center;margin-bottom:10px}
+.sttitle{font-family:'Fraunces',serif;font-size:20px;font-weight:600;font-style:italic;color:var(--ink);margin-bottom:5px}
+.stdesc{font-size:12px;color:var(--ink3);line-height:1.58;max-width:270px}
+.spbar{height:3px;background:var(--border);margin:0 14px 16px;border-radius:99px;overflow:hidden}
+.spfill{height:100%;border-radius:99px;transition:width 1s,background .6s}
+.ostats{display:grid;grid-template-columns:1fr 1fr;gap:7px;padding:0 14px 18px}
+.ostat{background:var(--bg);border-radius:11px;padding:9px 11px;border:1px solid var(--border)}
+.osl{font-size:9px;font-weight:700;color:var(--ink4);letter-spacing:.5px;text-transform:uppercase;margin-bottom:2px}
+.osv{font-size:14px;font-weight:700}.oss{font-size:10px;color:var(--ink4);margin-top:1px}
+.rs{display:flex;flex-direction:column;gap:14px}
+.card{background:var(--white);border-radius:18px;box-shadow:var(--shadow);padding:18px}
+.ctitle{font-size:13px;font-weight:700;color:var(--ink);margin-bottom:14px;display:flex;align-items:center;gap:7px}
+.cico{width:26px;height:26px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:13px}
+.fl{font-size:10px;font-weight:700;color:var(--ink4);text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:5px}
+input,select{width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:9px;padding:8px 11px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--ink);outline:none;transition:border-color .18s}
+input:focus,select:focus{border-color:var(--orange)}
+.pill-row{display:flex;gap:5px;flex-wrap:wrap}
+.hp{padding:5px 12px;border-radius:99px;font-size:11px;font-weight:600;border:1.5px solid var(--border);background:var(--bg);color:var(--ink2);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s}
+.hp.on{background:var(--orange);color:#fff;border-color:var(--orange);box-shadow:0 2px 8px rgba(232,98,42,.25)}
+.hp:hover:not(.on){border-color:var(--orange);color:var(--orange)}
+.gbw{margin:12px 0 0}.gbr{display:flex;justify-content:space-between;font-size:11px;font-weight:600;color:var(--ink3);margin-bottom:5px}
+.gbt{height:4px;background:var(--border);border-radius:99px;overflow:hidden}
+.gbf{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--orange),var(--amber));transition:width 1s}
+.gbtimes{display:flex;justify-content:space-between;font-size:10px;color:var(--ink4);margin-top:3px}
+.btn{width:100%;padding:10px;border-radius:11px;border:none;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all .18s;display:flex;align-items:center;justify-content:center;gap:6px}
+.bp{background:var(--orange);color:#fff;box-shadow:0 3px 10px rgba(232,98,42,.28);margin-bottom:7px}.bp:hover{background:#d4551f;transform:translateY(-1px)}
+.bg2{background:var(--bg);color:var(--ink2);border:1.5px solid var(--border);margin-bottom:7px}.bg2:hover{background:var(--border)}
+.bst{background:var(--pl);color:var(--purple);border:1.5px solid #d8c8f0}.bst:hover{background:#e8d8f8}
+.ins{background:linear-gradient(135deg,var(--al),var(--ol));border:1px solid #f0d8c0;border-radius:11px;padding:11px 13px;margin-top:12px}
+.ins-l{font-size:9px;font-weight:700;color:var(--amber);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px}
+.ins-t{font-size:12px;color:var(--ink2);line-height:1.58;transition:opacity .3s}
+/* TIMELINE */
+.tlw{max-height:370px;overflow-y:auto;padding-right:3px}
+.tlw::-webkit-scrollbar{width:3px}.tlw::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+.tli{display:flex;gap:10px;padding:7px 0;position:relative;transition:opacity .35s}
+.tli.past{opacity:.32}.tli.future{opacity:.16}
+.tlconn{position:absolute;left:13px;top:35px;width:1px;height:calc(100% - 6px);background:var(--border)}
+.tld{width:28px;height:28px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px;border:2px solid transparent;z-index:1;position:relative}
+.tli.cur .tld{animation:rp 2s ease-in-out infinite}
+@keyframes rp{0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}
+.tlb{flex:1}.tln{font-size:12px;font-weight:700}.tlr{font-size:10px;color:var(--ink4);font-weight:500;margin-top:1px}
+.tlbr{font-size:11px;color:var(--ink3);margin-top:2px;line-height:1.5}
+.tlex{font-size:11px;font-weight:700;cursor:pointer;margin-top:3px;border:none;background:none;font-family:'DM Sans',sans-serif;padding:0}
+.tlp{display:none;margin-top:9px;background:var(--bg);border-radius:11px;padding:11px 12px;border:1px solid var(--border)}
+.tlp.open{display:block}
+.dchips{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:9px}
+.dchip{background:var(--white);border-radius:7px;padding:7px 9px;border:1px solid var(--border)}
+.dcl{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--ink4);margin-bottom:2px}
+.dcv{font-size:12px;font-weight:700}
+.ds{margin-bottom:7px}.dsh{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--ink3);margin-bottom:2px}
+.db{font-size:11px;color:var(--ink2);line-height:1.62}
+.dl{font-size:11px;color:var(--ink2);line-height:1.7;padding-left:13px}.dl li{margin-bottom:2px}
+/* HERO */
+.hero{background:var(--white);border-radius:22px;box-shadow:var(--shadow-lg);padding:48px 40px;text-align:center;max-width:480px;margin:0 auto}
+.herocircle{width:96px;height:96px;border-radius:50%;margin:0 auto 22px;display:flex;align-items:center;justify-content:center;font-size:42px;background:linear-gradient(135deg,var(--ol),var(--al));border:2px solid #f5d8c0}
+.heroh{font-family:'Fraunces',serif;font-size:30px;font-weight:300;font-style:italic;color:var(--ink);margin-bottom:9px}
+.herop{font-size:14px;color:var(--ink3);line-height:1.7;max-width:300px;margin:0 auto 26px}
+/* SCHEDULE */
+.sg{display:grid;grid-template-columns:1fr 1fr;gap:14px}.sf{grid-column:1/3}
+.pgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+.pc{border:2px solid var(--border);border-radius:14px;padding:14px;cursor:pointer;transition:all .18s;background:var(--white)}
+.pc:hover{border-color:var(--orange);box-shadow:0 4px 14px rgba(232,98,42,.1)}
+.pc.sel{border-color:var(--orange);background:var(--ol)}
+.pn{font-family:'Fraunces',serif;font-size:22px;font-weight:600;color:var(--orange)}
+.pf{font-size:11px;font-weight:600;color:var(--ink4);margin-top:1px}
+.pd{font-size:11px;color:var(--ink3);margin-top:6px;line-height:1.5}
+.psps{margin-top:8px;display:flex;flex-wrap:wrap;gap:3px}
+.psp{font-size:9px;font-weight:700;padding:2px 7px;border-radius:99px}
+.wb{display:flex;gap:9px;align-items:flex-end;margin-top:4px}
+.wd{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px}
+.wdn{font-size:9px;font-weight:700;color:var(--ink4);text-transform:uppercase;letter-spacing:.3px}
+.wdb{width:100%;height:100px;display:flex;flex-direction:column;border-radius:7px;overflow:hidden}
+.wde{background:#ddf0e0;border:1px solid #b8ddc0}.wdf{transition:height .4s}
+.wd.today .wdf{box-shadow:0 3px 10px rgba(232,98,42,.28)}
+.wdl{font-size:9px;color:var(--ink4);font-weight:600}
+.planrow{display:flex;align-items:center;gap:11px;padding:9px 0;border-bottom:1px solid var(--border)}.planrow:last-child{border:none}
+.plico{width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.pllabel{font-size:12px;font-weight:700}.pltime{font-size:11px;color:var(--ink3);margin-top:1px}
+/* BODY */
+.bodyg{display:grid;grid-template-columns:1fr 1fr;gap:14px}.bodyf{grid-column:1/3}
+.twocol{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.threecol{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px}
+.igrp{margin-bottom:11px}
+.irow{display:flex;align-items:center;gap:7px}
+.iunit{font-size:12px;font-weight:700;color:var(--ink3);white-space:nowrap}
+.hrow{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.sc{background:var(--bg);border-radius:11px;padding:12px;border:1px solid var(--border)}
+.scl{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--ink4);margin-bottom:3px}
+.scv{font-family:'Fraunces',serif;font-size:24px;font-weight:300;color:var(--ink)}
+.scu{font-size:11px;color:var(--ink4);font-weight:400}
+.bmiscale{margin-top:12px}
+.bmilabels{display:flex;justify-content:space-between;font-size:9px;color:var(--ink4);font-weight:600;margin-bottom:3px}
+.bmitrack{height:7px;background:linear-gradient(90deg,#90caf9 0%,#66bb6a 30%,#ffa726 62%,#ef5350 100%);border-radius:99px;position:relative}
+.bmimarker{position:absolute;top:-4px;width:14px;height:14px;border-radius:50%;background:var(--ink);border:2.5px solid var(--white);box-shadow:0 1px 4px rgba(0,0,0,.25);transform:translateX(-50%);transition:left .6s}
+.bmiresult{font-size:12px;font-weight:600;margin-top:8px;padding:7px 11px;border-radius:8px}
+.bodysvgwrap{display:flex;gap:18px;align-items:flex-start;width:100%}
+.bsocol{display:flex;flex-direction:column;gap:7px;flex:1}
+.bsoitem{display:flex;align-items:center;gap:7px;padding:7px 10px;background:var(--white);border-radius:9px;border:1px solid var(--border)}
+.bsodot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+.bsolabel{font-size:11px;font-weight:600;color:var(--ink3)}
+.bsoval{font-size:13px;font-weight:700;color:var(--ink);margin-left:auto}
+.igrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px}
+.ic2{background:var(--bg);border-radius:11px;padding:13px;border:1px solid var(--border);text-align:center}
+.ic2i{font-size:20px;margin-bottom:5px}
+.ic2v{font-family:'Fraunces',serif;font-size:22px;font-weight:300;color:var(--ink)}
+.ic2l{font-size:9px;font-weight:700;color:var(--ink4);text-transform:uppercase;letter-spacing:.5px;margin-top:2px}
+.ic2n{font-size:11px;color:var(--ink3);margin-top:3px;line-height:1.4}
+.pnote{background:linear-gradient(135deg,var(--ol),var(--al));border:1px solid #f0d8c0;border-radius:13px;padding:15px;margin-top:13px}
+.pnotel{font-size:9px;font-weight:700;color:var(--orange);text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px}
+.pnotet{font-size:13px;color:var(--ink2);line-height:1.65}
+/* JOURNAL */
+.jtop{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+.jtitle{font-family:'Fraunces',serif;font-size:24px;font-weight:300;font-style:italic;color:var(--ink)}
+.jbadge{background:var(--orange);color:#fff;font-size:11px;font-weight:700;padding:4px 12px;border-radius:99px}
+.jstats{display:grid;grid-template-columns:repeat(3,1fr);gap:11px;margin-bottom:18px}
+.jscard{background:var(--white);border-radius:14px;padding:16px;box-shadow:var(--shadow);text-align:center}
+.jsci{font-size:20px;margin-bottom:6px}
+.jscv{font-family:'Fraunces',serif;font-size:24px;font-weight:300;color:var(--ink)}
+.jscl{font-size:11px;color:var(--ink4);font-weight:600;margin-top:2px}
+.jlist{display:flex;flex-direction:column;gap:7px}
+.jrow{background:var(--white);border-radius:13px;padding:14px 16px;box-shadow:var(--shadow);display:flex;align-items:center;gap:12px;transition:transform .15s}.jrow:hover{transform:translateX(3px)}
+.jrdt{width:42px;height:42px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.jrdate{font-size:13px;font-weight:700;color:var(--ink)}.jrtime{font-size:11px;color:var(--ink4);margin-top:1px}
+.jrdur{font-family:'Fraunces',serif;font-size:21px;font-weight:300;color:var(--orange);margin-left:auto}
+.jrstage{font-size:10px;font-weight:700;padding:3px 9px;border-radius:99px;margin-left:9px}
+.empty{text-align:center;padding:50px 20px;color:var(--ink4);font-size:14px;line-height:1.7}
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(70px);z-index:999;background:var(--ink);color:#fff;border-radius:11px;padding:11px 18px;font-size:13px;font-weight:600;box-shadow:var(--shadow-lg);transition:transform .28s cubic-bezier(.4,0,.2,1);white-space:nowrap}
+.toast.show{transform:translateX(-50%) translateY(0)}
+@media(max-width:740px){.lg,.sg,.bodyg{grid-template-columns:1fr}.sf,.bodyf{grid-column:1}.pgrid,.threecol,.igrid{grid-template-columns:1fr 1fr}.jstats{grid-template-columns:1fr}.view{padding:14px}nav{padding:0 14px}.ntab{padding:7px 11px;font-size:12px}}
+</style>
+</head>
+<body>
+<nav>
+  <div class="brand">Pul<span>se</span></div>
+  <div class="ntabs">
+    <button class="ntab on" onclick="nav2('live',this)">⚡ Live</button>
+    <button class="ntab" onclick="nav2('sched',this)">📅 Schedule</button>
+    <button class="ntab" onclick="nav2('body',this)">🧬 Body</button>
+    <button class="ntab" onclick="nav2('journal',this)">📖 Journal</button>
+  </div>
+</nav>
+
+<div class="view on" id="v-live">
+  <div id="hero-idle" style="display:none">
+    <div class="hero">
+      <div class="herocircle">⚡</div>
+      <div class="heroh">Start your fast</div>
+      <p class="herop">Track every metabolic stage in real time. Know exactly what your body is doing — from digestion to deep cellular repair.</p>
+      <button class="btn bp" style="max-width:230px;margin:0 auto" onclick="startNow()">Start fasting now</button>
+    </div>
+  </div>
+  <div class="lg" id="live-active">
+    <div class="oc">
+      <div class="och"><div class="lbadge"><div class="ldot"></div>Live</div><div class="snum" id="snum">Stage 1 of 7</div></div>
+      <div class="occ">
+        <div class="orw">
+          <svg class="rsvg" viewBox="0 0 188 188">
+            <circle class="rtrack" cx="94" cy="94" r="80"/>
+            <circle class="rstage" id="rstage" cx="94" cy="94" r="80" stroke-dasharray="502" stroke-dashoffset="502" stroke="#e8622a"/>
+            <circle class="rtrack" cx="94" cy="94" r="63" stroke-width="4"/>
+            <circle class="rgoal" id="rgoal" cx="94" cy="94" r="63" stroke-dasharray="396" stroke-dashoffset="396" stroke="#e8622a"/>
+          </svg>
+          <div class="ori" id="ori">
+            <div class="oem" id="oem">🍽️</div>
+            <div class="ohms" id="ohms">00:00</div>
+            <div class="osub">elapsed</div>
+            <div class="osn" id="osn">Digestion</div>
+          </div>
+        </div>
+        <div class="strow">
+          <div class="sttitle" id="sttitle">Digestion Phase</div>
+          <div class="stdesc" id="stdesc">Your body is processing the last meal. Insulin is elevated as glucose is absorbed into cells for energy.</div>
+        </div>
+      </div>
+      <div class="spbar"><div class="spfill" id="spfill" style="width:0%"></div></div>
+      <div class="ostats">
+        <div class="ostat"><div class="osl">Insulin</div><div class="osv" id="ov-ins" style="color:#e8622a">High</div><div class="oss">blood level</div></div>
+        <div class="ostat"><div class="osl">Fat Burn</div><div class="osv" id="ov-fat" style="color:#2d7d52">0%</div><div class="oss">fuel source</div></div>
+        <div class="ostat"><div class="osl">Autophagy</div><div class="osv" id="ov-aut" style="color:#6b3fa0">None</div><div class="oss">cell cleaning</div></div>
+        <div class="ostat"><div class="osl">Ketones</div><div class="osv" id="ov-ket" style="color:#2d5f8a">Low</div><div class="oss">brain fuel</div></div>
+      </div>
+    </div>
+    <div class="rs">
+      <div class="card">
+        <div class="ctitle"><div class="cico" style="background:var(--ol)">⏱</div>Fast Controls</div>
+        <div class="igrp"><label class="fl">Start Time</label><input type="datetime-local" id="sinp"/></div>
+        <div class="igrp"><label class="fl">Goal</label>
+          <div class="pill-row" id="gpills">
+            <button class="hp on" onclick="setGoal(16,this)">16h</button>
+            <button class="hp" onclick="setGoal(18,this)">18h</button>
+            <button class="hp" onclick="setGoal(24,this)">24h</button>
+            <button class="hp" onclick="setGoal(36,this)">36h</button>
+            <button class="hp" onclick="setGoal(48,this)">48h</button>
+          </div>
+          <div class="gbw" id="gbw" style="display:none">
+            <div class="gbr"><span>Goal progress</span><span id="gpct">0%</span></div>
+            <div class="gbt"><div class="gbf" id="gbf" style="width:0%"></div></div>
+            <div class="gbtimes"><span>Start</span><span id="gend">—</span></div>
+          </div>
+        </div>
+        <button class="btn bp" id="btn-start" onclick="doStart()">▶ Start Fast</button>
+        <button class="btn bst" id="btn-stop" onclick="doStop()" style="display:none">■ End Fast &amp; Save</button>
+        <button class="btn bg2" onclick="nav2('sched',document.querySelectorAll('.ntab')[1])">📅 Browse Schedules</button>
+        <div class="ins"><div class="ins-l">💡 Insight</div><div class="ins-t" id="ins-t">Start your fast after dinner — sleep counts toward your total.</div></div>
+      </div>
+      <div class="card">
+        <div class="ctitle"><div class="cico" style="background:var(--gl)">🗺</div>Metabolic Journey <span style="font-size:11px;color:var(--ink4);font-weight:500;margin-left:auto">tap for deep dive</span></div>
+        <div class="tlw" id="timeline"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="view" id="v-sched">
+  <div class="sg">
+    <div class="card sf">
+      <div class="ctitle"><div class="cico" style="background:var(--ol)">⚡</div>Fasting Protocols</div>
+      <div class="pgrid" id="pgrid"></div>
+    </div>
+    <div class="card">
+      <div class="ctitle"><div class="cico" style="background:var(--bl)">📋</div>Today's Plan</div>
+      <div id="tplan"></div>
+      <button class="btn bp" style="margin-top:14px" onclick="applyP()">Apply &amp; Start Now</button>
+    </div>
+    <div class="card">
+      <div class="ctitle"><div class="cico" style="background:#fdf8e8">🗓</div>Weekly View</div>
+      <div class="wb" id="wbars"></div>
+      <div style="display:flex;gap:11px;margin-top:10px;font-size:11px;font-weight:600;color:var(--ink3)">
+        <span style="display:flex;align-items:center;gap:4px"><span style="width:9px;height:9px;border-radius:2px;background:var(--orange);display:inline-block"></span>Fasting</span>
+        <span style="display:flex;align-items:center;gap:4px"><span style="width:9px;height:9px;border-radius:2px;background:#ddf0e0;border:1px solid #b8ddc0;display:inline-block"></span>Eating</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="view" id="v-body">
+  <div class="bodyg">
+    <div class="card">
+      <div class="ctitle"><div class="cico" style="background:var(--bg)">📏</div>Your Measurements <span style="font-size:11px;color:var(--ink4);font-weight:500;margin-left:auto">Imperial</span></div>
+      <div class="igrp"><label class="fl">Weight</label><div class="irow"><input type="number" id="p-lbs" placeholder="165" oninput="recalc()"><span class="iunit">lbs</span></div></div>
+      <div class="igrp"><label class="fl">Height</label>
+        <div class="hrow">
+          <div class="irow"><input type="number" id="p-ft" placeholder="5" oninput="recalc()" min="3" max="8"><span class="iunit">ft</span></div>
+          <div class="irow"><input type="number" id="p-in" placeholder="10" oninput="recalc()" min="0" max="11"><span class="iunit">in</span></div>
+        </div>
+      </div>
+      <div class="twocol">
+        <div class="igrp"><label class="fl">Age</label><input type="number" id="p-age" placeholder="30" oninput="recalc()"></div>
+        <div class="igrp"><label class="fl">Sex</label><select id="p-sex" onchange="recalc()"><option value="m">Male</option><option value="f">Female</option></select></div>
+      </div>
+      <div class="igrp"><label class="fl">Activity Level</label>
+        <select id="p-act" onchange="recalc()">
+          <option value="1.2">Sedentary — desk job, little movement</option>
+          <option value="1.375">Light — 1–3 workouts per week</option>
+          <option value="1.55" selected>Moderate — 3–5 workouts per week</option>
+          <option value="1.725">Active — hard training 6–7x/week</option>
+          <option value="1.9">Athlete — physical labor or 2x/day</option>
+        </select>
+      </div>
+    </div>
+    <div class="card" style="display:flex;flex-direction:column">
+      <div class="ctitle"><div class="cico" style="background:var(--bg)">🧍</div>Body Profile</div>
+      <div class="bodysvgwrap">
+        <svg viewBox="0 0 90 220" width="110" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="45" cy="20" r="16" fill="#fde8d0" stroke="#e8c4a0" stroke-width="1.5"/>
+          <rect x="39" y="34" width="12" height="9" rx="3" fill="#fde8d0" stroke="#e8c4a0" stroke-width="1.5"/>
+          <rect id="bsvg-torso" x="24" y="42" width="42" height="66" rx="10" fill="#fde8d0" stroke="#e8c4a0" stroke-width="1.5"/>
+          <rect x="9" y="44" width="13" height="52" rx="6" fill="#fde8d0" stroke="#e8c4a0" stroke-width="1.5"/>
+          <rect x="68" y="44" width="13" height="52" rx="6" fill="#fde8d0" stroke="#e8c4a0" stroke-width="1.5"/>
+          <rect x="24" y="106" width="17" height="64" rx="7" fill="#fde8d0" stroke="#e8c4a0" stroke-width="1.5"/>
+          <rect x="49" y="106" width="17" height="64" rx="7" fill="#fde8d0" stroke="#e8c4a0" stroke-width="1.5"/>
+          <rect id="bsvg-fat" x="22" y="40" width="46" height="70" rx="14" fill="rgba(232,98,42,0.06)" stroke="rgba(232,98,42,0.15)" stroke-width="1"/>
+          <ellipse cx="45" cy="82" rx="13" ry="9" fill="rgba(45,125,82,0.1)" stroke="rgba(45,125,82,0.25)" stroke-width="1"/>
+          <circle cx="38" cy="57" r="4" fill="rgba(220,50,50,0.15)" stroke="rgba(220,50,50,0.3)" stroke-width="1"/>
+          <line x1="22" y1="76" x2="68" y2="76" stroke="rgba(212,133,58,0.3)" stroke-width="1" stroke-dasharray="3,2"/>
+        </svg>
+        <div class="bsocol">
+          <div class="bsoitem"><div class="bsodot" style="background:#e8622a"></div><span class="bsolabel">BMI</span><span class="bsoval" id="bso-bmi">—</span></div>
+          <div class="bsoitem"><div class="bsodot" style="background:#2d7d52"></div><span class="bsolabel">BMR</span><span class="bsoval" id="bso-bmr">— kcal</span></div>
+          <div class="bsoitem"><div class="bsodot" style="background:#2d5f8a"></div><span class="bsolabel">Daily</span><span class="bsoval" id="bso-tdee">— kcal</span></div>
+          <div class="bsoitem"><div class="bsodot" style="background:#6b3fa0"></div><span class="bsolabel">Body Fat</span><span class="bsoval" id="bso-bf">—%</span></div>
+        </div>
+      </div>
+      <div class="bmiscale" id="bmiscale" style="width:100%;margin-top:14px">
+        <div class="bmilabels"><span>Under</span><span>Normal</span><span>Over</span><span>Obese</span></div>
+        <div class="bmitrack"><div class="bmimarker" id="bmimarker" style="left:2%"></div></div>
+        <div class="bmiresult" id="bmiresult" style="display:none"></div>
+      </div>
+    </div>
+    <div class="card bodyf">
+      <div class="ctitle"><div class="cico" style="background:var(--bg)">🔬</div>Personalised Fasting Insights</div>
+      <div class="igrid">
+        <div class="ic2"><div class="ic2i">🔋</div><div class="ic2v" id="ig-glyc">~12h</div><div class="ic2l">Glycogen Depletion</div><div class="ic2n">When stored glucose runs out</div></div>
+        <div class="ic2"><div class="ic2i">⚗️</div><div class="ic2v" id="ig-keto">~18h</div><div class="ic2l">Ketosis Entry</div><div class="ic2n">When fat becomes primary fuel</div></div>
+        <div class="ic2"><div class="ic2i">🔥</div><div class="ic2v" id="ig-fbr">—</div><div class="ic2l">Fat Burn Rate</div><div class="ic2n" id="ig-fbr-note">kcal burned per fasting hour</div></div>
+      </div>
+      <div class="pnote"><div class="pnotel">✦ Your Personal Note</div><div class="pnotet" id="pnote">Fill in your measurements above to get personalised fasting guidance.</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="view" id="v-journal">
+  <div class="jtop"><div class="jtitle">Fasting Journal</div><span class="jbadge" id="j-badge">0 entries</span></div>
+  <div class="jstats">
+    <div class="jscard"><div class="jsci">🏆</div><div class="jscv" id="j-long">—</div><div class="jscl">Longest Fast</div></div>
+    <div class="jscard"><div class="jsci">📈</div><div class="jscv" id="j-avg">—</div><div class="jscl">Average Duration</div></div>
+    <div class="jscard"><div class="jsci">🔥</div><div class="jscv" id="j-tot">0</div><div class="jscl">Total Fasts</div></div>
+  </div>
+  <div class="jlist" id="jlist"><div class="empty">📖<br>No records yet. Complete your first fast to see it here.</div></div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const ST=[
+  {id:'dig',n:'Digestion',h:[0,4],c:'#e8622a',bg:'linear-gradient(135deg,#fde8d4,#fdf5ee)',ic:'🍽️',title:'Digestion Phase',desc:'Your body is processing the last meal. Insulin is elevated as glucose is absorbed into cells for immediate energy.',ins:'High',fat:'0%',aut:'None',ket:'Low',brief:'0–4h · Food being broken down, glucose absorbed.',hormones:'Insulin peaks 30–60 min post-meal. Glucagon suppressed. Leptin rises signalling fullness. GIP and GLP-1 released from gut to amplify insulin.',organs:'Stomach and small intestine actively digest. Pancreas secretes amylase, lipase and protease. Liver receives glucose-rich portal blood for glycogen storage.',feel:'You may feel warm, full, and slightly sluggish. Blood flow diverted to digestive organs. Normal to feel mentally less sharp.',tips:['Avoid snacking — every bite resets your insulin clock and delays fat burning.','A 10–15 min walk after eating significantly reduces blood glucose spike.','Avoid lying flat after eating to prevent reflux.','Drink water, not juice — any sugar resets the fast timer.'],science:'Insulin binds GLUT4 receptors on muscle and fat cells, enabling glucose entry. Excess glucose is polymerised into glycogen: ~100g in liver, ~400g in muscles. Leftover glucose is converted to triglycerides via de novo lipogenesis.'},
+  {id:'tr',n:'Fed→Fasted',h:[4,8],c:'#c87820',bg:'linear-gradient(135deg,#fdecd0,#fdf8ee)',ic:'⚡',title:'Fed→Fasted Transition',desc:'Insulin falls steadily. Your body taps liver glycogen as blood glucose drops.',ins:'Falling',fat:'5–15%',aut:'Minimal',ket:'Low',brief:'4–8h · Insulin dropping, liver glycogen being tapped.',hormones:'Insulin declining. Glucagon rising — signals liver to begin glycogenolysis. Ghrelin (hunger hormone) rising. Mild norepinephrine uptick.',organs:'Liver breaks glycogen back to glucose. Pancreas shifts to glucagon dominance. Adipose tissue senses falling insulin.',feel:'Mild hunger begins, especially if used to frequent eating. Some feel slight energy dip — temporary.',tips:['Sparkling water or black coffee can blunt hunger signals.','Light cardio is great here — accelerates glycogen depletion.','Hunger arrives in waves and passes within 20 min.','Avoid "just a small snack" — it resets everything.'],science:'Glucagon activates hepatic phosphorylase, releasing glucose-1-phosphate from glycogen chains. Gluconeogenesis begins slowly using alanine from muscle and glycerol from fat cells.'},
+  {id:'gl',n:'Glycogen Burn',h:[8,12],c:'#a87010',bg:'linear-gradient(135deg,#fdf4c8,#fdfaee)',ic:'🔋',title:'Glycogen Depletion',desc:'Liver glycogen nearly gone. Growth hormone surges to protect muscle. Fat burning ramps up.',ins:'Low',fat:'20–40%',aut:'Starting',ket:'Rising',brief:'8–12h · Glycogen nearly gone, fat mobilisation ramping.',hormones:'HGH rises up to 300% to preserve muscle. Cortisol may rise modestly. Free fatty acids appear in bloodstream.',organs:'Liver nearly out of stored glycogen. Fat cells activate hormone-sensitive lipase, releasing fatty acids. Muscles switch to fatty acid oxidation.',feel:'Hunger may peak here — the "hunger wall." Mild irritability or light-headedness possible. Once past, energy typically improves.',tips:['Electrolyte water (sodium + potassium) is the #1 tool for this window.','Don\'t confuse hunger with craving — drink water first.','Light movement helps; avoid intense exercise here.','This discomfort lifts within 30–60 min for most people.'],science:'As liver glycogen falls below ~20g, hypothalamus signals pituitary to release GH. GH activates hormone-sensitive lipase in adipose tissue via PKA signaling, initiating lipolysis.'},
+  {id:'fat',n:'Fat Burning',h:[12,18],c:'#2d7d52',bg:'linear-gradient(135deg,#d8f0e0,#eef8f2)',ic:'🔥',title:'Fat Oxidation Mode',desc:'Glycogen depleted. Fat is your primary fuel. Ketone production begins. Mental clarity often improves sharply.',ins:'Very Low',fat:'50–70%',aut:'Active',ket:'Moderate',brief:'12–18h · Fat is primary fuel, ketones forming.',hormones:'Insulin near baseline. HGH at 400–500% baseline. Norepinephrine elevated — drives alertness and fat mobilisation. Adiponectin rising.',organs:'Liver converts fatty acids to acetyl-CoA via beta-oxidation. Brain begins accepting beta-hydroxybutyrate alongside glucose.',feel:'Hunger typically disappears. Sustained energy, sharp focus, mild sense of well-being. Slight fasting breath is normal (acetone).',tips:['This is the sweet spot of 16:8 fasting.','Moderate exercise now amplifies fat burning without muscle loss.','If breaking here, use protein + fat, not carbs.','Black coffee enhances fat oxidation.'],science:'Beta-oxidation in mitochondria cleaves fatty acid chains into 2-carbon acetyl-CoA units. Liver produces three ketone bodies: acetoacetate, beta-hydroxybutyrate (BHB), and acetone. BHB crosses the blood-brain barrier via MCT transporters.'},
+  {id:'keto',n:'Ketosis',h:[18,24],c:'#6b3fa0',bg:'linear-gradient(135deg,#eed8f8,#f5eeff)',ic:'⚗️',title:'Nutritional Ketosis',desc:'Blood ketones measurable. Brain running 40–70% on ketones. Autophagy strongly active. Deep metabolic shift.',ins:'Minimal',fat:'70–85%',aut:'Strong',ket:'High',brief:'18–24h · Blood BHB measurable, strong autophagy.',hormones:'BHB reaches 0.5–2.0 mmol/L. IGF-1 decreasing. BDNF (brain growth factor) rising. mTOR partially suppressed — repair mode engaging.',organs:'Brain now runs majority on BHB — more efficient, less oxidative stress. Liver is primary ketone producer.',feel:'Hunger absent. Energy feels clean and steady. Heightened mental clarity commonly reported. Mild diuresis from ketone excretion.',tips:['Magnesium glycinate prevents muscle cramps in this phase.','Supplement electrolytes if exercising.','Urine test strips can confirm ketosis at home.','Ideal fast break: eggs + avocado or salmon.'],science:'Ketosis confirmed at blood BHB > 0.5 mmol/L. BHB acts as an HDAC inhibitor (epigenetic effect). Critically, BHB inhibits the NLRP3 inflammasome — explaining fasting\'s anti-inflammatory benefits.'},
+  {id:'deep',n:'Deep Ketosis',h:[24,36],c:'#2d5f8a',bg:'linear-gradient(135deg,#d0e4f8,#eaf4ff)',ic:'🧬',title:'Deep Metabolic Reset',desc:'Peak autophagy. Cells aggressively recycling damaged proteins. mTOR fully suppressed. IGF-1 significantly reduced.',ins:'Near Zero',fat:'85–95%',aut:'Peak',ket:'Very High',brief:'24–36h · Peak autophagy, deep cellular renewal.',hormones:'IGF-1 drops 40–60%. mTOR fully OFF — maximum repair. AMPK maximally activated. GH elevated. Cortisol slightly elevated to maintain blood glucose.',organs:'Autophagy peaks across liver, neurons, and immune cells. Lysosomes actively digest damaged organelles. Bone marrow begins immune precursor changes.',feel:'Hunger usually absent. Energy varies — some feel euphoric and focused, others tired. Deep quiet calm. Dreams may become more vivid.',tips:['Electrolytes essential: 2–3g sodium, 1–3g potassium, 300–500mg magnesium.','Light walking or yoga is ideal; no heavy lifting.','Breaking: bone broth first, wait 30 min, then small protein meal.','Avoid breaking with high-carb foods — refeeding risk.'],science:'Autophagy (Nobel Prize 2016). ULK1 kinase (activated by AMPK, suppressed by mTOR) triggers autophagosome formation. Beclin-1 and ATG proteins build membrane sacs that engulf damaged proteins and organelles, delivering them to lysosomes for recycling.'},
+  {id:'ext',n:'Extended Fast',h:[36,72],c:'#1a4a7a',bg:'linear-gradient(135deg,#c0d8f0,#e0eeff)',ic:'🌌',title:'Extended Regeneration',desc:'Profound cellular renewal. Stem cell activation likely. Immune system resetting. Medical supervision strongly advised.',ins:'Near Zero',fat:'95%+',aut:'Intense',ket:'Very High',brief:'36–72h · Stem cell activation, immune reset.',hormones:'PKA inhibition triggers hematopoietic stem cell changes. HGH remains high. T3/T4 may decrease slightly. Cortisol management becomes critical.',organs:'Bone marrow stem cells replenished. Gut lining regenerates with refeeding. Brain BDNF at peak — strongest neuroplasticity signal.',feel:'Deep stillness and clarity common. Physical energy varies widely. Blood pressure may be lower. Heart rate typically lower.',tips:['Only attempt with prior experience and ideally medical oversight.','Daily electrolyte monitoring is essential.','Heart palpitations, confusion = break immediately.','Refeeding: bone broth (hour 1) → soft protein (hour 3) → normal food (day 2).','Breaking correctly is as important as the fast itself.'],science:"Valter Longo (USC): 48–72h fasting reduces PKA activity in hematopoietic stem cells, triggering IGF-1 pathway suppression. Old/damaged white blood cells are cleared via autophagy. New cells regenerate after refeeding — a form of immune system reset."}
+];
+const PROTOS=[
+  {n:'16:8',f:16,e:8,d:'The most popular and sustainable protocol. Fast from dinner to early lunch. Reaches fat-burning stage daily.',sp:['Digestion','Fat Burning'],sc:['#e8622a','#2d7d52']},
+  {n:'18:6',f:18,e:6,d:'Daily ketosis entry. Eat 12pm–6pm. Excellent for fat loss and cognitive performance.',sp:['Fat Burning','Ketosis'],sc:['#2d7d52','#6b3fa0']},
+  {n:'20:4',f:20,e:4,d:'Advanced daily fasting. One main meal + small window. Strong metabolic benefits.',sp:['Fat Burning','Ketosis'],sc:['#2d7d52','#6b3fa0']},
+  {n:'OMAD',f:23,e:1,d:'One Meal A Day. Maximum daily metabolic benefit. Requires careful nutrition density.',sp:['Fat Burning','Ketosis'],sc:['#2d7d52','#6b3fa0']},
+  {n:'5:2',f:24,e:0,d:'Eat normally 5 days/week. Full 24h fast on 2 non-consecutive days. Reaches deep ketosis.',sp:['Deep Ketosis'],sc:['#2d5f8a']},
+  {n:'36h',f:36,e:0,d:'Peak autophagy. Immune renewal. Only for experienced fasters with preparation.',sp:['Deep Ketosis','Extended'],sc:['#2d5f8a','#1a4a7a']}
+];
+const TIPS=['Start your fast after dinner — sleep counts toward your total fasting time.','Black coffee has zero calories and can boost fat oxidation by up to 30%.','Electrolytes prevent the #1 fasting complaint: headaches and fatigue.','Hunger arrives in waves — drink water and it typically passes in 20 minutes.','Breaking your fast with protein and fat keeps insulin low longer.','HGH (growth hormone) can increase 500% during fasting — protecting muscle.','Autophagy is your body\'s self-cleaning system, peaking at 24–48 hours.','Ketones are a cleaner fuel than glucose — less oxidative stress on the brain.'];
+
+let S={start:null,goalH:16,proto:0,profile:{lbs:null,ft:null,inches:null,age:null,sex:'m',act:1.55},recs:[],tipIdx:0};
+try{const sv=localStorage.getItem('pulse2');if(sv){const p=JSON.parse(sv);S={...S,...p};if(S.start)S.start=new Date(S.start);}}catch(e){}
+function save(){try{localStorage.setItem('pulse2',JSON.stringify(S));}catch(e){}}
+
+function nav2(id,btn){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('on'));
+  document.querySelectorAll('.ntab').forEach(b=>b.classList.remove('on'));
+  document.getElementById('v-'+id).classList.add('on');
+  if(btn)btn.classList.add('on');
+}
+function toISO(d){const x=new Date(d);x.setMinutes(x.getMinutes()-x.getTimezoneOffset());return x.toISOString().slice(0,16);}
+function pad(n){return String(n).padStart(2,'0');}
+function fmtH(h){return h<1?Math.round(h*60)+'m':h.toFixed(1)+'h';}
+function getStage(h){for(let i=ST.length-1;i>=0;i--)if(h>=ST[i].h[0])return ST[i];return ST[0];}
+
+function startNow(){S.start=new Date();save();showActive();document.getElementById('sinp').value=toISO(S.start);toast('⚡ Fast started!');}
+function doStart(){const v=document.getElementById('sinp').value;if(!v){toast('⚠️ Set a start time');return;}S.start=new Date(v);save();showActive();toast('✅ Tracking started!');}
+function doStop(){
+  if(!S.start)return;
+  const h=(Date.now()-S.start.getTime())/3600000,st=getStage(h);
+  S.recs.unshift({start:S.start.toISOString(),h,stage:st.n,c:st.c,bg:st.bg,ic:st.ic});
+  if(S.recs.length>60)S.recs=S.recs.slice(0,60);
+  S.start=null;save();showIdle();renderJ();toast('🎉 Fast saved!');
+}
+function showActive(){
+  document.getElementById('hero-idle').style.display='none';
+  document.getElementById('live-active').style.display='grid';
+  document.getElementById('btn-start').style.display='none';
+  document.getElementById('btn-stop').style.display='flex';
+  document.getElementById('gbw').style.display='block';
+  upGend();
+}
+function showIdle(){
+  document.getElementById('live-active').style.display='grid';
+  document.getElementById('hero-idle').style.display='none';
+  document.getElementById('btn-start').style.display='flex';
+  document.getElementById('btn-stop').style.display='none';
+  document.getElementById('gbw').style.display='none';
+}
+function setGoal(h,el){S.goalH=h;save();document.querySelectorAll('#gpills .hp').forEach(p=>p.classList.remove('on'));el.classList.add('on');upGend();}
+function upGend(){if(!S.start)return;const e=new Date(S.start.getTime()+S.goalH*3600000);document.getElementById('gend').textContent=e.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});}
+
+function tick(){
+  if(!S.start)return;
+  const elH=(Date.now()-S.start.getTime())/3600000,st=getStage(elH);
+  const ts=Math.floor(elH*3600),h=Math.floor(ts/3600),m=Math.floor((ts%3600)/60),s=ts%60;
+  document.getElementById('ohms').textContent=h>0?`${h}:${pad(m)}:${pad(s)}`:`${pad(m)}:${pad(s)}`;
+  const sp=Math.min((elH-st.h[0])/(st.h[1]-st.h[0]),1);
+  const rs=document.getElementById('rstage');rs.style.strokeDashoffset=502*(1-sp);rs.style.stroke=st.c;
+  const gp=Math.min(elH/S.goalH,1);
+  const rg=document.getElementById('rgoal');rg.style.strokeDashoffset=396*(1-gp);rg.style.stroke=st.c;
+  document.getElementById('ori').style.background=st.bg;
+  document.getElementById('oem').textContent=st.ic;
+  document.getElementById('osn').textContent=st.n;document.getElementById('osn').style.color=st.c;
+  document.getElementById('sttitle').textContent=st.title;document.getElementById('stdesc').textContent=st.desc;
+  document.getElementById('snum').textContent=`Stage ${ST.indexOf(st)+1} of ${ST.length}`;
+  document.getElementById('spfill').style.width=(sp*100)+'%';document.getElementById('spfill').style.background=st.c;
+  const se=(id,v,c)=>{const e=document.getElementById(id);if(e){e.textContent=v;e.style.color=c;}};
+  se('ov-ins',st.ins,st.c);se('ov-fat',st.fat,'#2d7d52');se('ov-aut',st.aut,'#6b3fa0');se('ov-ket',st.ket,'#2d5f8a');
+  const pct=Math.round(gp*100);
+  document.getElementById('gpct').textContent=pct+'%';document.getElementById('gbf').style.width=pct+'%';
+  hlTL(st.id);
+}
+
+function buildTL(){
+  document.getElementById('timeline').innerHTML=ST.map((st,i)=>`
+    <div class="tli future" id="tl-${st.id}">
+      ${i<ST.length-1?'<div class="tlconn"></div>':''}
+      <div class="tld" style="background:${st.bg};border-color:${st.c}">${st.ic}</div>
+      <div class="tlb">
+        <div class="tln" style="color:${st.c}">${st.n}</div>
+        <div class="tlr">${st.h[0]}h – ${st.h[1]>48?'72h':st.h[1]+'h'}</div>
+        <div class="tlbr">${st.brief}</div>
+        <button class="tlex" onclick="togTL('tlp-${st.id}',this)" style="color:${st.c}">+ Deep dive</button>
+        <div class="tlp" id="tlp-${st.id}">
+          <div class="dchips">
+            <div class="dchip"><div class="dcl">Fat Burn</div><div class="dcv" style="color:#2d7d52">${st.fat}</div></div>
+            <div class="dchip"><div class="dcl">Insulin</div><div class="dcv" style="color:${st.c}">${st.ins}</div></div>
+            <div class="dchip"><div class="dcl">Autophagy</div><div class="dcv" style="color:#6b3fa0">${st.aut}</div></div>
+            <div class="dchip"><div class="dcl">Ketones</div><div class="dcv" style="color:#2d5f8a">${st.ket}</div></div>
+          </div>
+          <div class="ds"><div class="dsh" style="color:${st.c}">⚗️ Hormones</div><div class="db">${st.hormones}</div></div>
+          <div class="ds"><div class="dsh" style="color:${st.c}">🫀 Organs Active</div><div class="db">${st.organs}</div></div>
+          <div class="ds"><div class="dsh" style="color:${st.c}">💬 What You May Feel</div><div class="db">${st.feel}</div></div>
+          <div class="ds"><div class="dsh" style="color:${st.c}">✅ Stage Tips</div><ul class="dl">${st.tips.map(t=>'<li>'+t+'</li>').join('')}</ul></div>
+          <div class="ds"><div class="dsh" style="color:${st.c}">🔬 The Science</div><div class="db">${st.science}</div></div>
+        </div>
+      </div>
+    </div>`).join('');
+}
+function togTL(id,btn){const p=document.getElementById(id);const o=p.classList.toggle('open');btn.textContent=o?'− Close':'+ Deep dive';}
+function hlTL(id){let f=false;ST.forEach(st=>{const e=document.getElementById('tl-'+st.id);if(!e)return;if(st.id===id){e.className='tli cur';f=true;}else if(!f)e.className='tli past';else e.className='tli future';});}
+
+function buildProtos(){
+  document.getElementById('pgrid').innerHTML=PROTOS.map((p,i)=>`
+    <div class="pc ${i===S.proto?'sel':''}" onclick="selP(${i})">
+      <div class="pn">${p.n}</div><div class="pf">${p.f}h fast · ${p.e}h eating</div>
+      <div class="pd">${p.d}</div>
+      <div class="psps">${p.sp.map((s,j)=>`<span class="psp" style="background:${p.sc[j]}18;color:${p.sc[j]}">${s}</span>`).join('')}</div>
+    </div>`).join('');
+  buildTP();
+}
+function selP(i){S.proto=i;save();buildProtos();buildWeek();}
+function buildTP(){
+  const p=PROTOS[S.proto],now=new Date(),es=new Date(now);es.setHours(12,0,0,0);
+  const fs=new Date(es.getTime()+p.e*3600000),fe=new Date(fs.getTime()+p.f*3600000);
+  const fmt=d=>d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+  const rows=[];
+  if(p.e>0)rows.push({ic:'🍽️',bg:'#e8f5ee',label:'Eating Window',time:`${fmt(es)} → ${fmt(fs)}`,col:'#2d7d52'});
+  rows.push({ic:'⚡',bg:'#fdf0ea',label:'Fasting Window',time:`${fmt(fs)} → ${fmt(fe)}`,col:'#e8622a'});
+  rows.push({ic:'🔥',bg:'#e8f0f8',label:'Fat burn starts',time:fmt(new Date(fs.getTime()+12*3600000)),col:'#2d5f8a'});
+  if(p.f>=18)rows.push({ic:'⚗️',bg:'#f0eaf8',label:'Ketosis possible at',time:fmt(new Date(fs.getTime()+18*3600000)),col:'#6b3fa0'});
+  document.getElementById('tplan').innerHTML=`<div style="font-size:13px;font-weight:700;color:var(--orange);margin-bottom:12px">${p.n} · ${p.f}h fast</div>`+
+    rows.map(r=>`<div class="planrow"><div class="plico" style="background:${r.bg}">${r.ic}</div><div><div class="pllabel" style="color:${r.col}">${r.label}</div><div class="pltime">${r.time}</div></div></div>`).join('');
+}
+function applyP(){const p=PROTOS[S.proto];S.goalH=p.f;S.start=new Date();save();nav2('live',document.querySelector('.ntab'));showActive();toast('✅ '+p.n+' started!');}
+function buildWeek(){
+  const days=['M','T','W','T','F','S','S'],p=PROTOS[S.proto],raw=new Date().getDay(),ti=raw===0?6:raw-1;
+  document.getElementById('wbars').innerHTML=days.map((d,i)=>{
+    const isT=i===ti,fp=Math.round((p.f/24)*100),ep=100-fp;
+    return `<div class="wd ${isT?'today':''}">
+      <div class="wdn" style="${isT?'color:var(--orange)':''}">${d}</div>
+      <div class="wdb">${ep>0?`<div class="wde" style="height:${ep}px"></div>`:''}
+        <div class="wdf" style="height:${fp}px;background:${isT?'linear-gradient(180deg,var(--orange),var(--om))':'linear-gradient(180deg,#f5c0a0,#fad8c0)'}"></div>
+      </div>
+      <div class="wdl">${p.f}h</div>
+    </div>`;}).join('');
+}
+
+function recalc(){
+  const lbs=parseFloat(document.getElementById('p-lbs').value)||null;
+  const ft=parseFloat(document.getElementById('p-ft').value)||null;
+  const inc=parseFloat(document.getElementById('p-in').value)||0;
+  const age=parseFloat(document.getElementById('p-age').value)||null;
+  const sex=document.getElementById('p-sex').value;
+  const act=parseFloat(document.getElementById('p-act').value);
+  S.profile={lbs,ft,inches:inc,age,sex,act};save();
+  if(!lbs||!ft||!age)return;
+  const kg=lbs*0.453592,cm=((ft*12)+inc)*2.54,hm=cm/100;
+  const bmi=kg/(hm*hm),bmr=sex==='m'?10*kg+6.25*cm-5*age+5:10*kg+6.25*cm-5*age-161;
+  const tdee=Math.round(bmr*act),bf=sex==='m'?Math.max(3,1.20*bmi+0.23*age-16.2):Math.max(10,1.20*bmi+0.23*age-5.4);
+  document.getElementById('bso-bmi').textContent=bmi.toFixed(1);
+  document.getElementById('bso-bmr').textContent=Math.round(bmr)+' kcal';
+  document.getElementById('bso-tdee').textContent=tdee+' kcal';
+  document.getElementById('bso-bf').textContent=bf.toFixed(1)+'%';
+  const pos=Math.min(96,Math.max(2,((bmi-15)/25)*100));
+  document.getElementById('bmimarker').style.left=pos+'%';
+  const bc=bmi<18.5?'#2d5f8a':bmi<25?'#2d7d52':bmi<30?'#d4853a':'#e8622a';
+  const bl=bmi<18.5?'Underweight':bmi<25?'Normal weight ✓':bmi<30?'Overweight':'Obese';
+  const br=document.getElementById('bmiresult');br.style.display='block';br.style.background=bc+'14';br.style.color=bc;br.textContent='BMI '+bmi.toFixed(1)+' — '+bl;
+  const fatO=Math.min(0.28,Math.max(0.02,(bmi-18)/38));
+  document.getElementById('bsvg-fat').style.fill=`rgba(232,98,42,${fatO})`;
+  const glyH=sex==='m'?12:10,ketH=bmi>30?14:bmi>25?16:18,fbr=Math.round((tdee/24)*0.82);
+  document.getElementById('ig-glyc').textContent='~'+glyH+'h';
+  document.getElementById('ig-keto').textContent='~'+ketH+'h';
+  document.getElementById('ig-fbr').textContent='~'+fbr;
+  let note=bmi>30?`With your BMI, your body has substantial fat reserves. You may enter ketosis earlier (~${ketH}h). Daily 16:8 fasting is highly effective for your metabolic health.`
+    :bmi<18.5?'You are underweight. Extended fasting is not appropriate. Stick to 12–14h windows and prioritise nutrient-dense eating. Consider consulting a dietitian.'
+    :sex==='f'?'Women can be more sensitive to extended fasting due to hormonal cycles. Start with 14:10 or 16:8. Avoid fasting in the luteal phase if you notice energy issues.'
+    :`Your metrics suggest good metabolic health. A consistent 16–18h daily fast would optimise fat oxidation, improve insulin sensitivity, and support cellular repair.`;
+  document.getElementById('pnote').textContent=note;
+}
+function loadProf(){
+  const p=S.profile;
+  if(p.lbs)document.getElementById('p-lbs').value=p.lbs;
+  if(p.ft)document.getElementById('p-ft').value=p.ft;
+  if(p.inches)document.getElementById('p-in').value=p.inches;
+  if(p.age)document.getElementById('p-age').value=p.age;
+  document.getElementById('p-sex').value=p.sex||'m';
+  document.getElementById('p-act').value=p.act||1.55;
+  recalc();
+}
+
+function renderJ(){
+  const r=S.recs;
+  document.getElementById('j-badge').textContent=r.length+' entr'+(r.length!==1?'ies':'y');
+  document.getElementById('j-tot').textContent=r.length;
+  if(!r.length){document.getElementById('jlist').innerHTML='<div class="empty">📖<br>No records yet. Complete your first fast to see it here.</div>';document.getElementById('j-long').textContent='—';document.getElementById('j-avg').textContent='—';return;}
+  document.getElementById('j-long').textContent=fmtH(Math.max(...r.map(x=>x.h)));
+  document.getElementById('j-avg').textContent=fmtH(r.reduce((a,b)=>a+b.h,0)/r.length);
+  document.getElementById('jlist').innerHTML=r.map(x=>{const d=new Date(x.start);
+    return `<div class="jrow"><div class="jrdt" style="background:${x.bg||'#fde8d4'}">${x.ic||'🍽️'}</div>
+      <div><div class="jrdate">${d.toLocaleDateString([],{weekday:'short',month:'short',day:'numeric'})}</div>
+      <div class="jrtime">${d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}</div></div>
+      <div class="jrdur">${fmtH(x.h)}</div>
+      <div class="jrstage" style="background:${x.c||'#e8622a'}15;color:${x.c||'#e8622a'}">${x.stage}</div>
+    </div>`;}).join('');
+}
+function rotateTip(){S.tipIdx=(S.tipIdx+1)%TIPS.length;const e=document.getElementById('ins-t');if(!e)return;e.style.opacity='0';setTimeout(()=>{e.textContent=TIPS[S.tipIdx];e.style.opacity='1';},300);}
+function toast(msg){const e=document.getElementById('toast');e.textContent=msg;e.classList.add('show');setTimeout(()=>e.classList.remove('show'),2800);}
+
+const now=new Date();now.setSeconds(0,0);
+document.getElementById('sinp').value=toISO(now);
+buildTL();buildProtos();buildWeek();renderJ();loadProf();
+S.start?showActive():showIdle();
+tick();setInterval(tick,1000);setInterval(rotateTip,11000);
+</script>
+</body>
+</html>
