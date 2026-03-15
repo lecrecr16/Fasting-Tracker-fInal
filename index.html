@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pulse Fasting</title>
+<title>Ketara — Know Your Fast</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300;1,9..144,600&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -19,8 +19,11 @@
 }
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased}
-nav{background:var(--white);border-bottom:1px solid var(--border);padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:58px;position:sticky;top:0;z-index:100;box-shadow:0 1px 0 var(--border)}
-.brand{font-family:'Fraunces',serif;font-size:21px;font-weight:600;color:var(--ink);letter-spacing:-.5px}.brand span{color:var(--orange)}
+nav{background:var(--white);border-bottom:1px solid var(--border);padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:66px;position:sticky;top:0;z-index:100;box-shadow:0 1px 0 var(--border)}
+.brand{display:flex;flex-direction:column;gap:1px}
+.brand-name{font-family:'Fraunces',serif;font-size:22px;font-weight:600;color:var(--ink);letter-spacing:-.5px;line-height:1}
+.brand-name span{color:var(--orange)}
+.brand-tag{font-size:10px;font-weight:500;color:var(--ink4);letter-spacing:.3px}
 .ntabs{display:flex;gap:2px;background:var(--bg);border:1px solid var(--border);border-radius:11px;padding:3px}
 .ntab{padding:7px 15px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;border:none;background:transparent;color:var(--ink3);transition:all .18s;font-family:'DM Sans',sans-serif;white-space:nowrap}
 .ntab.on{background:var(--white);color:var(--ink);box-shadow:0 1px 5px rgba(26,22,20,.1);font-weight:600}
@@ -178,7 +181,10 @@ input:focus,select:focus{border-color:var(--orange)}
 </head>
 <body>
 <nav>
-  <div class="brand">Pul<span>se</span></div>
+  <div class="brand">
+    <div class="brand-name">Ket<span>ara</span></div>
+    <div class="brand-tag">Know your fast. Own your body.</div>
+  </div>
   <div class="ntabs">
     <button class="ntab on" onclick="nav2('live',this)">⚡ Live</button>
     <button class="ntab" onclick="nav2('sched',this)">📅 Schedule</button>
@@ -192,7 +198,7 @@ input:focus,select:focus{border-color:var(--orange)}
     <div class="hero">
       <div class="herocircle">⚡</div>
       <div class="heroh">Start your fast</div>
-      <p class="herop">Track every metabolic stage in real time. Know exactly what your body is doing — from digestion to deep cellular repair.</p>
+      <p class="herop">Ketara tracks every metabolic stage in real time — from digestion to deep cellular repair. Know exactly what your body is doing, hour by hour.</p>
       <button class="btn bp" style="max-width:230px;margin:0 auto" onclick="startNow()">Start fasting now</button>
     </div>
   </div>
@@ -233,11 +239,19 @@ input:focus,select:focus{border-color:var(--orange)}
         <div class="igrp"><label class="fl">Start Time</label><input type="datetime-local" id="sinp"/></div>
         <div class="igrp"><label class="fl">Goal</label>
           <div class="pill-row" id="gpills">
+            <button class="hp" onclick="setGoal(14,this)">14h</button>
             <button class="hp on" onclick="setGoal(16,this)">16h</button>
             <button class="hp" onclick="setGoal(18,this)">18h</button>
             <button class="hp" onclick="setGoal(24,this)">24h</button>
             <button class="hp" onclick="setGoal(36,this)">36h</button>
             <button class="hp" onclick="setGoal(48,this)">48h</button>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;margin-top:9px">
+            <div style="font-size:10px;font-weight:700;color:var(--ink4);text-transform:uppercase;letter-spacing:.5px;white-space:nowrap">Custom:</div>
+            <input type="number" id="custom-hours" placeholder="e.g. 20" min="1" max="168" step="0.5"
+              style="flex:1;padding:7px 10px;font-size:13px;border-radius:9px;border:1.5px solid var(--border);background:var(--bg);color:var(--ink);font-family:'DM Sans',sans-serif;outline:none"
+              oninput="setCustomGoal(this.value)" onfocus="this.style.borderColor='var(--orange)'" onblur="this.style.borderColor='var(--border)'"/>
+            <div style="font-size:12px;font-weight:600;color:var(--ink3)">hrs</div>
           </div>
           <div class="gbw" id="gbw" style="display:none">
             <div class="gbr"><span>Goal progress</span><span id="gpct">0%</span></div>
@@ -378,8 +392,8 @@ const PROTOS=[
 const TIPS=['Start your fast after dinner — sleep counts toward your total fasting time.','Black coffee has zero calories and can boost fat oxidation by up to 30%.','Electrolytes prevent the #1 fasting complaint: headaches and fatigue.','Hunger arrives in waves — drink water and it typically passes in 20 minutes.','Breaking your fast with protein and fat keeps insulin low longer.','HGH (growth hormone) can increase 500% during fasting — protecting muscle.','Autophagy is your body\'s self-cleaning system, peaking at 24–48 hours.','Ketones are a cleaner fuel than glucose — less oxidative stress on the brain.'];
 
 let S={start:null,goalH:16,proto:0,profile:{lbs:null,ft:null,inches:null,age:null,sex:'m',act:1.55},recs:[],tipIdx:0};
-try{const sv=localStorage.getItem('pulse2');if(sv){const p=JSON.parse(sv);S={...S,...p};if(S.start)S.start=new Date(S.start);}}catch(e){}
-function save(){try{localStorage.setItem('pulse2',JSON.stringify(S));}catch(e){}}
+try{const sv=localStorage.getItem('ketara-v1');if(sv){const p=JSON.parse(sv);S={...S,...p};if(S.start)S.start=new Date(S.start);}}catch(e){}
+function save(){try{localStorage.setItem('ketara-v1',JSON.stringify(S));}catch(e){}}
 
 function nav2(id,btn){
   document.querySelectorAll('.view').forEach(v=>v.classList.remove('on'));
@@ -416,7 +430,15 @@ function showIdle(){
   document.getElementById('btn-stop').style.display='none';
   document.getElementById('gbw').style.display='none';
 }
-function setGoal(h,el){S.goalH=h;save();document.querySelectorAll('#gpills .hp').forEach(p=>p.classList.remove('on'));el.classList.add('on');upGend();}
+function setGoal(h,el){S.goalH=h;save();document.querySelectorAll('#gpills .hp').forEach(p=>p.classList.remove('on'));el.classList.add('on');const ci=document.getElementById('custom-hours');if(ci)ci.value='';upGend();}
+function setCustomGoal(val){
+  const h=parseFloat(val);
+  if(!h||h<0.5||h>168)return;
+  S.goalH=h;save();
+  document.querySelectorAll('#gpills .hp').forEach(p=>p.classList.remove('on'));
+  upGend();
+  toast('⏱ Goal set to '+h+'h');
+}
 function upGend(){if(!S.start)return;const e=new Date(S.start.getTime()+S.goalH*3600000);document.getElementById('gend').textContent=e.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});}
 
 function tick(){
