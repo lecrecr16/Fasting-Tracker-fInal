@@ -18,8 +18,8 @@
   --shadow-lg:0 2px 8px rgba(26,22,20,0.08),0 12px 40px rgba(26,22,20,0.1);
 }
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased}
-nav{background:var(--white);border-bottom:1px solid var(--border);padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:66px;position:sticky;top:0;z-index:100;box-shadow:0 1px 0 var(--border)}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;background-image:radial-gradient(circle,rgba(232,98,42,0.04) 1px,transparent 1px);background-size:28px 28px}
+nav{background:linear-gradient(180deg,#ffffff 0%,#fdfaf7 100%);border-bottom:1px solid var(--border);padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:66px;position:sticky;top:0;z-index:100;box-shadow:0 2px 16px rgba(26,22,20,0.05)}
 .brand{display:flex;flex-direction:column;gap:1px}
 .brand-name{font-family:'Fraunces',serif;font-size:22px;font-weight:600;color:var(--ink);letter-spacing:-.5px;line-height:1}
 .brand-name span{color:var(--orange)}
@@ -58,7 +58,8 @@ nav{background:var(--white);border-bottom:1px solid var(--border);padding:0 24px
 .osl{font-size:9px;font-weight:700;color:var(--ink4);letter-spacing:.5px;text-transform:uppercase;margin-bottom:2px}
 .osv{font-size:14px;font-weight:700}.oss{font-size:10px;color:var(--ink4);margin-top:1px}
 .rs{display:flex;flex-direction:column;gap:14px}
-.card{background:var(--white);border-radius:18px;box-shadow:var(--shadow);padding:18px}
+.card{background:var(--white);border-radius:18px;box-shadow:var(--shadow);padding:18px;transition:box-shadow .2s,transform .2s}
+.card:hover{box-shadow:0 4px 28px rgba(26,22,20,0.1);transform:translateY(-1px)}
 .ctitle{font-size:13px;font-weight:700;color:var(--ink);margin-bottom:14px;display:flex;align-items:center;gap:7px}
 .cico{width:26px;height:26px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:13px}
 .fl{font-size:10px;font-weight:700;color:var(--ink4);text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:5px}
@@ -106,7 +107,8 @@ input:focus,select:focus{border-color:var(--orange)}
 .heroh{font-family:'Fraunces',serif;font-size:30px;font-weight:300;font-style:italic;color:var(--ink);margin-bottom:9px}
 .herop{font-size:14px;color:var(--ink3);line-height:1.7;max-width:300px;margin:0 auto 26px}
 /* SCHEDULE */
-.sg{display:grid;grid-template-columns:1fr 1fr;gap:14px}.sf{grid-column:1/3}
+.sg{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.sf{grid-column:1/3}
 .pgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
 .pc{border:2px solid var(--border);border-radius:14px;padding:14px;cursor:pointer;transition:all .18s;background:var(--white)}
 .pc:hover{border-color:var(--orange);box-shadow:0 4px 14px rgba(232,98,42,.1)}
@@ -162,7 +164,7 @@ input:focus,select:focus{border-color:var(--orange)}
 .jtop{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
 .jtitle{font-family:'Fraunces',serif;font-size:24px;font-weight:300;font-style:italic;color:var(--ink)}
 .jbadge{background:var(--orange);color:#fff;font-size:11px;font-weight:700;padding:4px 12px;border-radius:99px}
-.jstats{display:grid;grid-template-columns:repeat(3,1fr);gap:11px;margin-bottom:18px}
+.jstats{display:grid;grid-template-columns:repeat(4,1fr);gap:11px;margin-bottom:18px}
 .jscard{background:var(--white);border-radius:14px;padding:16px;box-shadow:var(--shadow);text-align:center}
 .jsci{font-size:20px;margin-bottom:6px}
 .jscv{font-family:'Fraunces',serif;font-size:24px;font-weight:300;color:var(--ink)}
@@ -275,13 +277,122 @@ input:focus,select:focus{border-color:var(--orange)}
 <div class="view" id="v-sched">
   <div class="sg">
     <div class="card sf">
-      <div class="ctitle"><div class="cico" style="background:var(--ol)">⚡</div>Fasting Protocols</div>
+      <div class="ctitle"><div class="cico" style="background:var(--ol)">⚡</div>Fasting Protocols <span style="font-size:11px;color:var(--ink4);font-weight:500;margin-left:auto">tap to select</span></div>
       <div class="pgrid" id="pgrid"></div>
+
+      <!-- CUSTOM PANEL — shown when Custom card selected -->
+      <div id="custom-panel" style="display:none;margin-top:18px;background:var(--bg);border-radius:16px;padding:20px;border:1.5px solid #d8c8f0;animation:fadeIn .25s ease">
+        @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+        <div style="font-size:13px;font-weight:700;color:var(--purple);margin-bottom:14px;display:flex;align-items:center;gap:7px">
+          <span style="font-size:18px">✏️</span> Build Your Custom Schedule
+        </div>
+
+        <!-- MODE TOGGLE -->
+        <div style="display:flex;gap:3px;background:var(--white);border:1px solid var(--border);border-radius:10px;padding:3px;margin-bottom:18px">
+          <button id="mode-slider-btn" onclick="switchMode('slider')" style="flex:1;padding:8px 6px;border-radius:7px;border:none;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;cursor:pointer;background:var(--orange);color:#fff;transition:all .18s">⟷ Slider</button>
+          <button id="mode-hours-btn" onclick="switchMode('hours')" style="flex:1;padding:8px 6px;border-radius:7px;border:none;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;cursor:pointer;background:transparent;color:var(--ink3);transition:all .18s">123 Hours</button>
+          <button id="mode-times-btn" onclick="switchMode('times')" style="flex:1;padding:8px 6px;border-radius:7px;border:none;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;cursor:pointer;background:transparent;color:var(--ink3);transition:all .18s">🕐 Start &amp; End</button>
+        </div>
+
+        <!-- SLIDER MODE -->
+        <div id="mode-slider">
+          <label class="fl">Fast duration</label>
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+            <input type="range" id="custom-fast-slider" min="4" max="72" step="0.5" value="16"
+              style="flex:1;accent-color:var(--orange);cursor:pointer"
+              oninput="onSliderChange()"/>
+            <div style="background:var(--orange);color:#fff;font-weight:700;font-size:15px;padding:6px 14px;border-radius:9px;min-width:58px;text-align:center" id="custom-fast-display">16h</div>
+          </div>
+          <label class="fl">Eating window starts at</label>
+          <input type="time" id="custom-eat-start" value="12:00"
+            style="width:100%;background:var(--white);border:1.5px solid var(--border);border-radius:9px;padding:9px 12px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink);outline:none;margin-bottom:4px"
+            oninput="onSliderChange()"/>
+        </div>
+
+        <!-- HOURS MODE -->
+        <div id="mode-hours" style="display:none">
+          <label class="fl">Type exact fasting hours</label>
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+            <input type="number" id="custom-hours-input" placeholder="e.g. 19.5" min="1" max="168" step="0.5" value="16"
+              style="flex:1;background:var(--white);border:1.5px solid var(--border);border-radius:9px;padding:10px 14px;font-family:'DM Sans',sans-serif;font-size:24px;font-weight:700;color:var(--ink);outline:none;text-align:center"
+              oninput="onHoursChange()" onfocus="this.style.borderColor='var(--orange)'" onblur="this.style.borderColor='var(--border)'"/>
+            <div style="font-size:13px;font-weight:700;color:var(--ink3)">hours</div>
+          </div>
+          <label class="fl">Eating window starts at</label>
+          <input type="time" id="custom-eat-start-h" value="12:00"
+            style="width:100%;background:var(--white);border:1.5px solid var(--border);border-radius:9px;padding:9px 12px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink);outline:none;margin-bottom:4px"
+            oninput="onHoursChange()"/>
+        </div>
+
+        <!-- TIMES MODE -->
+        <div id="mode-times" style="display:none">
+          <p style="font-size:12px;color:var(--ink3);margin-bottom:14px;line-height:1.6">Pick your exact start and end times — duration is calculated automatically.</p>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:8px">
+            <div>
+              <label class="fl" style="color:var(--orange)">⚡ Fast starts (stop eating)</label>
+              <input type="time" id="custom-fast-start-time" value="20:00"
+                style="width:100%;background:var(--white);border:2px solid var(--orange);border-radius:9px;padding:10px 12px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:700;color:var(--ink);outline:none"
+                oninput="onTimesChange()"/>
+            </div>
+            <div>
+              <label class="fl" style="color:#2d7d52">🍽️ Fast ends (start eating)</label>
+              <input type="time" id="custom-fast-end-time" value="12:00"
+                style="width:100%;background:var(--white);border:2px solid #2d7d52;border-radius:9px;padding:10px 12px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:700;color:var(--ink);outline:none"
+                oninput="onTimesChange()"/>
+            </div>
+          </div>
+          <div id="times-duration-badge" style="text-align:center;padding:9px;background:var(--orange);color:#fff;border-radius:9px;font-size:14px;font-weight:700;display:none;margin-bottom:4px"></div>
+        </div>
+
+        <!-- VISUAL 24H BAR -->
+        <div style="margin:18px 0 14px">
+          <div style="font-size:10px;font-weight:700;color:var(--ink4);text-transform:uppercase;letter-spacing:.5px;margin-bottom:7px">Your 24-hour day</div>
+          <div style="position:relative;height:40px;border-radius:11px;overflow:hidden;background:var(--border)">
+            <div id="custom-fast-bar" style="position:absolute;top:0;bottom:0;background:linear-gradient(90deg,var(--orange),var(--amber));transition:all .35s;display:flex;align-items:center;justify-content:center">
+              <span id="custom-fast-label" style="font-size:10px;font-weight:700;color:#fff;white-space:nowrap;padding:0 6px">⚡ Fasting</span>
+            </div>
+            <div id="custom-eat-bar" style="position:absolute;top:0;bottom:0;background:linear-gradient(90deg,#2d7d52,#3d9a5c);transition:all .35s;display:flex;align-items:center;justify-content:center">
+              <span id="custom-eat-label" style="font-size:10px;font-weight:700;color:#fff;white-space:nowrap;padding:0 6px">🍽️ Eating</span>
+            </div>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--ink4);font-weight:600;margin-top:5px">
+            <span>12 am</span><span>6 am</span><span>12 pm</span><span>6 pm</span><span>12 am</span>
+          </div>
+        </div>
+
+        <!-- SUMMARY -->
+        <div id="custom-plan-summary" style="background:var(--white);border-radius:12px;padding:12px 14px;border:1px solid var(--border);margin-bottom:16px;font-size:12px;color:var(--ink2);line-height:2"></div>
+
+        <!-- ACTUAL START -->
+        <div style="background:var(--white);border:1.5px solid var(--border);border-radius:12px;padding:13px 14px;margin-bottom:12px">
+          <div style="font-size:11px;font-weight:700;color:var(--ink2);margin-bottom:10px">🕐 When did you actually start fasting?</div>
+          <div style="display:flex;gap:8px;align-items:center">
+            <button onclick="setActualStartNow()" style="flex-shrink:0;padding:8px 14px;background:var(--orange);color:#fff;border:none;border-radius:9px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap">Just now</button>
+            <input type="datetime-local" id="custom-actual-start"
+              style="flex:1;background:var(--bg);border:1.5px solid var(--border);border-radius:9px;padding:8px 10px;font-family:'DM Sans',sans-serif;font-size:12px;color:var(--ink);outline:none"
+              onfocus="this.style.borderColor='var(--orange)'" onblur="this.style.borderColor='var(--border)'"/>
+          </div>
+          <div id="actual-start-preview" style="font-size:11px;color:var(--ink3);margin-top:7px;font-weight:600"></div>
+        </div>
+
+        <button class="btn bp" onclick="applyCustomSchedule()">▶ Start This Custom Fast</button>
+      </div>
     </div>
+
     <div class="card">
       <div class="ctitle"><div class="cico" style="background:var(--bl)">📋</div>Today's Plan</div>
       <div id="tplan"></div>
-      <button class="btn bp" style="margin-top:14px" onclick="applyP()">Apply &amp; Start Now</button>
+      <div style="background:var(--bg);border:1.5px solid var(--border);border-radius:12px;padding:12px 14px;margin:14px 0 12px">
+        <div style="font-size:11px;font-weight:700;color:var(--ink2);margin-bottom:9px;display:flex;align-items:center;gap:6px"><span>🕐</span> When did your fast actually start?</div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <button onclick="setProtoStartNow()" style="flex-shrink:0;padding:7px 12px;background:var(--orange);color:#fff;border:none;border-radius:9px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap">Just now</button>
+          <input type="datetime-local" id="proto-actual-start"
+            style="flex:1;background:var(--white);border:1.5px solid var(--border);border-radius:9px;padding:7px 10px;font-family:'DM Sans',sans-serif;font-size:12px;color:var(--ink);outline:none"
+            onfocus="this.style.borderColor='var(--orange)'" onblur="this.style.borderColor='var(--border)'"/>
+        </div>
+        <div id="proto-start-preview" style="font-size:11px;color:var(--ink3);margin-top:7px;font-weight:600"></div>
+      </div>
+      <button class="btn bp" onclick="applyP()">Apply &amp; Start</button>
     </div>
     <div class="card">
       <div class="ctitle"><div class="cico" style="background:#fdf8e8">🗓</div>Weekly View</div>
@@ -361,13 +472,64 @@ input:focus,select:focus{border-color:var(--orange)}
 </div>
 
 <div class="view" id="v-journal">
-  <div class="jtop"><div class="jtitle">Fasting Journal</div><span class="jbadge" id="j-badge">0 entries</span></div>
-  <div class="jstats">
-    <div class="jscard"><div class="jsci">🏆</div><div class="jscv" id="j-long">—</div><div class="jscl">Longest Fast</div></div>
-    <div class="jscard"><div class="jsci">📈</div><div class="jscv" id="j-avg">—</div><div class="jscl">Average Duration</div></div>
-    <div class="jscard"><div class="jsci">🔥</div><div class="jscv" id="j-tot">0</div><div class="jscl">Total Fasts</div></div>
+  <!-- WHAT IS THE JOURNAL -->
+  <div style="background:linear-gradient(135deg,#fdf0ea,#fdf5f0);border:1px solid #f5d8c8;border-radius:18px;padding:20px 24px;margin-bottom:20px;display:flex;gap:18px;align-items:flex-start">
+    <div style="font-size:32px;flex-shrink:0">📖</div>
+    <div>
+      <div style="font-family:'Fraunces',serif;font-size:18px;font-weight:600;color:var(--ink);margin-bottom:5px">Your Fasting Journal</div>
+      <div style="font-size:13px;color:var(--ink2);line-height:1.7">Every time you complete a fast and tap <b>End Fast &amp; Save</b>, it gets recorded here automatically. Your journal tracks your history, shows your longest fast, calculates your average, and visualises your consistency over time. <span style="color:var(--orange);font-weight:600">The more you fast, the more your data tells a story.</span></div>
+    </div>
   </div>
-  <div class="jlist" id="jlist"><div class="empty">📖<br>No records yet. Complete your first fast to see it here.</div></div>
+
+  <div class="jtop"><div class="jtitle">History</div><span class="jbadge" id="j-badge">0 entries</span></div>
+
+  <!-- STATS ROW -->
+  <div class="jstats">
+    <div class="jscard">
+      <div class="jsci">🏆</div>
+      <div class="jscv" id="j-long">—</div>
+      <div class="jscl">Longest Fast</div>
+    </div>
+    <div class="jscard">
+      <div class="jsci">📈</div>
+      <div class="jscv" id="j-avg">—</div>
+      <div class="jscl">Average Duration</div>
+    </div>
+    <div class="jscard">
+      <div class="jsci">🔥</div>
+      <div class="jscv" id="j-tot">0</div>
+      <div class="jscl">Total Fasts</div>
+    </div>
+    <div class="jscard">
+      <div class="jsci">⚗️</div>
+      <div class="jscv" id="j-keto">0</div>
+      <div class="jscl">Reached Ketosis</div>
+    </div>
+  </div>
+
+  <!-- STREAK HEATMAP -->
+  <div class="card" style="margin-bottom:16px" id="j-heatmap-card">
+    <div class="ctitle"><div class="cico" style="background:var(--ol)">📅</div>Fasting Streak — Last 10 Weeks</div>
+    <div id="j-heatmap" style="display:flex;flex-wrap:wrap;gap:4px;margin-top:4px"></div>
+    <div style="display:flex;gap:12px;margin-top:12px;font-size:11px;font-weight:600;color:var(--ink4);align-items:center">
+      <span>Less</span>
+      <span style="display:flex;gap:3px">
+        <span style="width:12px;height:12px;border-radius:3px;background:#f0ebe0;border:1px solid var(--border);display:inline-block"></span>
+        <span style="width:12px;height:12px;border-radius:3px;background:#f5c8a8;display:inline-block"></span>
+        <span style="width:12px;height:12px;border-radius:3px;background:#e8916a;display:inline-block"></span>
+        <span style="width:12px;height:12px;border-radius:3px;background:var(--orange);display:inline-block"></span>
+      </span>
+      <span>More</span>
+    </div>
+  </div>
+
+  <!-- STAGE BREAKDOWN -->
+  <div class="card" style="margin-bottom:16px" id="j-breakdown-card" style="display:none">
+    <div class="ctitle"><div class="cico" style="background:var(--gl)">🧬</div>Stage Breakdown</div>
+    <div id="j-breakdown" style="display:flex;flex-direction:column;gap:7px"></div>
+  </div>
+
+  <div class="jlist" id="jlist"><div class="empty">📖<br>No records yet.<br><span style="font-size:12px">Tap <b>End Fast &amp; Save</b> on the Live tab after completing a fast.</span></div></div>
 </div>
 <div class="toast" id="toast"></div>
 
@@ -493,16 +655,39 @@ function togTL(id,btn){const p=document.getElementById(id);const o=p.classList.t
 function hlTL(id){let f=false;ST.forEach(st=>{const e=document.getElementById('tl-'+st.id);if(!e)return;if(st.id===id){e.className='tli cur';f=true;}else if(!f)e.className='tli past';else e.className='tli future';});}
 
 function buildProtos(){
-  document.getElementById('pgrid').innerHTML=PROTOS.map((p,i)=>`
+  const cards=PROTOS.map((p,i)=>`
     <div class="pc ${i===S.proto?'sel':''}" onclick="selP(${i})">
-      <div class="pn">${p.n}</div><div class="pf">${p.f}h fast · ${p.e}h eating</div>
+      <div class="pn">${p.n}</div>
+      <div class="pf">${p.f}h fast${p.e>0?' · '+p.e+'h eating window':' · Full day fast'}</div>
       <div class="pd">${p.d}</div>
       <div class="psps">${p.sp.map((s,j)=>`<span class="psp" style="background:${p.sc[j]}18;color:${p.sc[j]}">${s}</span>`).join('')}</div>
     </div>`).join('');
+  // Custom card appended to grid
+  const isCustom=S.proto===99;
+  const customCard=`
+    <div class="pc ${isCustom?'sel':''}" onclick="selP(99)" style="${isCustom?'':''}">
+      <div class="pn" style="color:var(--purple)">Custom</div>
+      <div class="pf">You set the hours</div>
+      <div class="pd">Slider, exact hours, or pick a start &amp; end time. All synced.</div>
+      <div class="psps">
+        <span class="psp" style="background:#6b3fa018;color:#6b3fa0">Any length</span>
+        <span class="psp" style="background:#e8622a18;color:#e8622a">Your schedule</span>
+      </div>
+    </div>`;
+  document.getElementById('pgrid').innerHTML=cards+customCard;
   buildTP();
 }
-function selP(i){S.proto=i;save();buildProtos();buildWeek();}
+function selP(i){
+  S.proto=i;save();buildProtos();
+  if(i!==99)buildWeek();
+  const cp=document.getElementById('custom-panel');
+  if(cp){
+    cp.style.display=i===99?'block':'none';
+    if(i===99){updateCustomSchedule();setTimeout(()=>cp.scrollIntoView({behavior:'smooth',block:'nearest'}),50);}
+  }
+}
 function buildTP(){
+  if(S.proto===99){document.getElementById('tplan').innerHTML='<div style="font-size:12px;color:var(--ink3);padding:8px 0">Select a protocol above, or use the Custom option to set your own hours.</div>';return;}
   const p=PROTOS[S.proto],now=new Date(),es=new Date(now);es.setHours(12,0,0,0);
   const fs=new Date(es.getTime()+p.e*3600000),fe=new Date(fs.getTime()+p.f*3600000);
   const fmt=d=>d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
@@ -514,9 +699,10 @@ function buildTP(){
   document.getElementById('tplan').innerHTML=`<div style="font-size:13px;font-weight:700;color:var(--orange);margin-bottom:12px">${p.n} · ${p.f}h fast</div>`+
     rows.map(r=>`<div class="planrow"><div class="plico" style="background:${r.bg}">${r.ic}</div><div><div class="pllabel" style="color:${r.col}">${r.label}</div><div class="pltime">${r.time}</div></div></div>`).join('');
 }
-function applyP(){const p=PROTOS[S.proto];S.goalH=p.f;S.start=new Date();save();nav2('live',document.querySelector('.ntab'));showActive();toast('✅ '+p.n+' started!');}
+
 function buildWeek(){
-  const days=['M','T','W','T','F','S','S'],p=PROTOS[S.proto],raw=new Date().getDay(),ti=raw===0?6:raw-1;
+  if(S.proto===99)return;
+  const days=['M','T','W','T','F','S','S'],p=PROTOS[S.proto]||PROTOS[0],raw=new Date().getDay(),ti=raw===0?6:raw-1;
   document.getElementById('wbars').innerHTML=days.map((d,i)=>{
     const isT=i===ti,fp=Math.round((p.f/24)*100),ep=100-fp;
     return `<div class="wd ${isT?'today':''}">
@@ -590,9 +776,249 @@ function renderJ(){
 function rotateTip(){S.tipIdx=(S.tipIdx+1)%TIPS.length;const e=document.getElementById('ins-t');if(!e)return;e.style.opacity='0';setTimeout(()=>{e.textContent=TIPS[S.tipIdx];e.style.opacity='1';},300);}
 function toast(msg){const e=document.getElementById('toast');e.textContent=msg;e.classList.add('show');setTimeout(()=>e.classList.remove('show'),2800);}
 
+// ── CUSTOM SCHEDULE ──────────────────────────────
+let customMode='slider'; // 'slider' | 'hours' | 'times'
+let customFastH=16;
+let customEatStartMins=12*60; // noon default
+
+function switchMode(mode){
+  customMode=mode;
+  ['slider','hours','times'].forEach(m=>{
+    document.getElementById('mode-'+m).style.display=m===mode?'block':'none';
+    const btn=document.getElementById('mode-'+m+'-btn');
+    btn.style.background=m===mode?'var(--orange)':'transparent';
+    btn.style.color=m===mode?'#fff':'var(--ink3)';
+  });
+  updateCustomSchedule();
+}
+
+function onSliderChange(){
+  customFastH=parseFloat(document.getElementById('custom-fast-slider').value)||16;
+  const t=document.getElementById('custom-eat-start').value||'12:00';
+  const [h,m]=t.split(':').map(Number);
+  customEatStartMins=h*60+m;
+  // sync hours input
+  const hi=document.getElementById('custom-hours-input');
+  if(hi)hi.value=customFastH;
+  updateCustomSchedule();
+}
+
+function onHoursChange(){
+  customFastH=parseFloat(document.getElementById('custom-hours-input').value)||16;
+  customFastH=Math.min(168,Math.max(0.5,customFastH));
+  const t=document.getElementById('custom-eat-start-h').value||'12:00';
+  const [h,m]=t.split(':').map(Number);
+  customEatStartMins=h*60+m;
+  // sync slider
+  const sl=document.getElementById('custom-fast-slider');
+  if(sl)sl.value=Math.min(72,customFastH);
+  document.getElementById('custom-fast-display').textContent=customFastH+'h';
+  updateCustomSchedule();
+}
+
+function onTimesChange(){
+  const fs=document.getElementById('custom-fast-start-time').value||'20:00';
+  const fe=document.getElementById('custom-fast-end-time').value||'12:00';
+  const [fsh,fsm]=fs.split(':').map(Number);
+  const [feh,fem]=fe.split(':').map(Number);
+  const fastStartMins=fsh*60+fsm;
+  const fastEndMins=feh*60+fem;
+  // eating starts when fast ends
+  customEatStartMins=fastEndMins;
+  // calc hours (handle overnight)
+  let diff=(fastEndMins-fastStartMins+1440)%1440;
+  if(diff===0)diff=1440;
+  customFastH=Math.round(diff/60*10)/10;
+  // sync slider + hours
+  const sl=document.getElementById('custom-fast-slider');
+  if(sl)sl.value=Math.min(72,customFastH);
+  document.getElementById('custom-fast-display').textContent=customFastH+'h';
+  const hi=document.getElementById('custom-hours-input');
+  if(hi)hi.value=customFastH;
+  const badge=document.getElementById('times-duration-badge');
+  if(badge)badge.textContent='⚡ That\'s a '+customFastH+'h fast';
+  updateCustomSchedule();
+}
+
+function updateCustomSchedule(){
+  const fastH=customFastH;
+  const eatH=Math.max(0,24-fastH);
+  document.getElementById('custom-fast-display').textContent=fastH+'h';
+
+  const eatStartMins=customEatStartMins;
+  const fastStartMins=(eatStartMins+eatH*60)%1440;
+
+  // visual bar
+  const fsP=(fastStartMins/1440)*100;
+  const fwP=Math.min(100,(fastH/24)*100);
+  const esP=(eatStartMins/1440)*100;
+  const ewP=(eatH/24)*100;
+
+  const fb=document.getElementById('custom-fast-bar');
+  const eb=document.getElementById('custom-eat-bar');
+  if(fwP>3){fb.style.left=fsP+'%';fb.style.width=fwP+'%';fb.style.display='flex';}else{fb.style.display='none';}
+  if(ewP>2){eb.style.left=esP+'%';eb.style.width=ewP+'%';eb.style.display='flex';}else{eb.style.display='none';}
+  document.getElementById('custom-fast-label').textContent=fastH>=3?'⚡ '+fastH+'h fast':'⚡';
+  document.getElementById('custom-eat-label').textContent=eatH>=2?'🍽️ '+eatH+'h eating':'🍽️';
+
+  const fmt=m=>{const hh=Math.floor(m/60)%24,mm=m%60;const ampm=hh<12?'am':'pm';return (hh%12||12)+':'+(mm<10?'0':'')+mm+' '+ampm;};
+  const eatEndMins=(eatStartMins+eatH*60)%1440;
+  const fastEndMins=(fastStartMins+fastH*60)%1440;
+
+  const reachFat=fastH>=12,reachKeto=fastH>=18,reachDeep=fastH>=24,reachExt=fastH>=36;
+  const stages=[];
+  if(reachFat)stages.push('<span style="color:#2d7d52;font-weight:700">🔥 Fat Burn</span>');
+  if(reachKeto)stages.push('<span style="color:#6b3fa0;font-weight:700">⚗️ Ketosis</span>');
+  if(reachDeep)stages.push('<span style="color:#2d5f8a;font-weight:700">🧬 Deep Reset</span>');
+  if(reachExt)stages.push('<span style="color:#1a4a7a;font-weight:700">🌌 Extended</span>');
+
+  document.getElementById('custom-plan-summary').innerHTML=`
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+      <div style="background:#e8f5ee;border-radius:9px;padding:9px 12px">
+        <div style="font-size:10px;font-weight:700;color:#2d7d52;text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px">🍽️ Eating</div>
+        <div style="font-size:13px;font-weight:700;color:var(--ink)">${fmt(eatStartMins)}</div>
+        <div style="font-size:11px;color:var(--ink3)">→ ${fmt(eatEndMins)} <span style="color:var(--ink4)">(${eatH>0?eatH+'h':'N/A'})</span></div>
+      </div>
+      <div style="background:#fdf0ea;border-radius:9px;padding:9px 12px">
+        <div style="font-size:10px;font-weight:700;color:var(--orange);text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px">⚡ Fasting</div>
+        <div style="font-size:13px;font-weight:700;color:var(--ink)">${fmt(fastStartMins)}</div>
+        <div style="font-size:11px;color:var(--ink3)">→ ${fmt(fastEndMins)} <span style="color:var(--ink4)">(${fastH}h)</span></div>
+      </div>
+    </div>
+    ${stages.length
+      ? `<div style="font-size:11px"><b style="color:var(--ink2)">Stages you'll reach:</b> ${stages.join(' · ')}</div>`
+      : `<div style="font-size:11px;color:var(--ink4)">Increase to 12h+ for fat burn · 18h+ for ketosis · 24h+ for deep reset</div>`
+    }
+  `;
+}
+
+function setActualStartNow(){
+  const now=new Date();
+  document.getElementById('custom-actual-start').value=toISO(now);
+  updateActualStartPreview('custom-actual-start','actual-start-preview');
+  toast('⏱ Set to right now');
+}
+function setProtoStartNow(){
+  const now=new Date();
+  document.getElementById('proto-actual-start').value=toISO(now);
+  updateActualStartPreview('proto-actual-start','proto-start-preview');
+  toast('⏱ Set to right now');
+}
+function updateActualStartPreview(inputId,previewId){
+  const v=document.getElementById(inputId).value;
+  const el=document.getElementById(previewId);
+  if(!v||!el)return;
+  const d=new Date(v);
+  const now=new Date();
+  const diffMs=now-d;
+  const diffH=diffMs/3600000;
+  if(diffMs<0){el.textContent='⚠️ That time is in the future';el.style.color='var(--orange)';return;}
+  const hrs=Math.floor(diffH);
+  const mins=Math.floor((diffH-hrs)*60);
+  const ago=hrs>0?`${hrs}h ${mins}m ago`:`${mins}m ago`;
+  el.style.color='var(--green)';
+  el.textContent=`✓ You've already been fasting for ${ago}`;
+}
+function applyCustomSchedule(){
+  if(!customFastH||customFastH<0.5){toast('⚠️ Set a valid duration first');return;}
+  const v=document.getElementById('custom-actual-start').value;
+  S.goalH=customFastH;
+  S.start=v?new Date(v):new Date();
+  if(S.start>new Date()){toast('⚠️ Start time can\'t be in the future');return;}
+  save();
+  nav2('live',document.querySelector('.ntab'));showActive();
+  const elH=(Date.now()-S.start.getTime())/3600000;
+  const msg=elH>0.1?`✅ Fast tracked from ${elH.toFixed(1)}h ago!`:'✅ Custom fast started!';
+  toast(msg);
+}
+function applyP(){
+  const p=PROTOS[S.proto];
+  const v=document.getElementById('proto-actual-start').value;
+  S.goalH=p.f;
+  S.start=v?new Date(v):new Date();
+  if(S.start>new Date()){toast('⚠️ Start time can\'t be in the future');return;}
+  save();
+  nav2('live',document.querySelector('.ntab'));showActive();
+  const elH=(Date.now()-S.start.getTime())/3600000;
+  const msg=elH>0.1?`✅ ${p.n} tracked from ${elH.toFixed(1)}h ago!`:`✅ ${p.n} started!`;
+  toast(msg);
+}
+
+function renderJ(){
+  const r=S.recs;
+  document.getElementById('j-badge').textContent=r.length+' entr'+(r.length!==1?'ies':'y');
+  document.getElementById('j-tot').textContent=r.length;
+  const ketoCount=r.filter(x=>x.h>=18).length;
+  document.getElementById('j-keto').textContent=ketoCount;
+  if(!r.length){
+    document.getElementById('jlist').innerHTML='<div class="empty">📖<br>No records yet.<br><span style="font-size:12px">Tap <b>End Fast &amp; Save</b> on the Live tab after completing a fast.</span></div>';
+    document.getElementById('j-long').textContent='—';document.getElementById('j-avg').textContent='—';
+    renderHeatmap([]);renderBreakdown([]);return;
+  }
+  document.getElementById('j-long').textContent=fmtH(Math.max(...r.map(x=>x.h)));
+  document.getElementById('j-avg').textContent=fmtH(r.reduce((a,b)=>a+b.h,0)/r.length);
+  renderHeatmap(r);renderBreakdown(r);
+  document.getElementById('jlist').innerHTML=r.map(x=>{const d=new Date(x.start);
+    return `<div class="jrow"><div class="jrdt" style="background:${x.bg||'#fde8d4'}">${x.ic||'🍽️'}</div>
+      <div><div class="jrdate">${d.toLocaleDateString([],{weekday:'short',month:'short',day:'numeric'})}</div>
+      <div class="jrtime">${d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}</div></div>
+      <div class="jrdur">${fmtH(x.h)}</div>
+      <div class="jrstage" style="background:${x.c||'#e8622a'}15;color:${x.c||'#e8622a'}">${x.stage}</div>
+    </div>`;}).join('');
+}
+
+function renderHeatmap(recs){
+  const map={};
+  recs.forEach(r=>{const d=new Date(r.start);const k=d.toISOString().slice(0,10);map[k]=(map[k]||0)+r.h;});
+  const today=new Date();const days=70;const cells=[];
+  for(let i=days-1;i>=0;i--){
+    const d=new Date(today);d.setDate(d.getDate()-i);
+    const k=d.toISOString().slice(0,10);const h=map[k]||0;
+    let bg='#f0ebe0';let border='1px solid var(--border)';
+    if(h>=24){bg='var(--orange)';border='none';}
+    else if(h>=16){bg='#e8916a';border='none';}
+    else if(h>=8){bg='#f5c8a8';border='none';}
+    cells.push(`<div title="${k}: ${h>0?fmtH(h):'No fast'}" style="width:14px;height:14px;border-radius:3px;background:${bg};border:${border};cursor:default;flex-shrink:0"></div>`);
+  }
+  document.getElementById('j-heatmap').innerHTML=cells.join('');
+}
+
+function renderBreakdown(recs){
+  if(!recs.length){document.getElementById('j-breakdown-card').style.display='none';return;}
+  document.getElementById('j-breakdown-card').style.display='block';
+  const counts={};
+  recs.forEach(r=>{counts[r.stage]=(counts[r.stage]||0)+1;});
+  const total=recs.length;
+  const sorted=Object.entries(counts).sort((a,b)=>b[1]-a[1]);
+  const stageColors={'Digestion':'#e8622a','Fed→Fasted':'#c87820','Glycogen Burn':'#a87010','Fat Burning':'#2d7d52','Ketosis':'#6b3fa0','Deep Ketosis':'#2d5f8a','Extended Fast':'#1a4a7a'};
+  document.getElementById('j-breakdown').innerHTML=sorted.map(([stage,count])=>{
+    const pct=Math.round((count/total)*100);
+    const c=stageColors[stage]||'#e8622a';
+    return `<div style="display:flex;align-items:center;gap:10px">
+      <div style="font-size:11px;font-weight:700;color:${c};min-width:100px">${stage}</div>
+      <div style="flex:1;height:8px;background:var(--border);border-radius:99px;overflow:hidden">
+        <div style="height:100%;width:${pct}%;background:${c};border-radius:99px;transition:width .6s"></div>
+      </div>
+      <div style="font-size:11px;font-weight:700;color:var(--ink3);min-width:32px;text-align:right">${count}x</div>
+    </div>`;
+  }).join('');
+}
+
 const now=new Date();now.setSeconds(0,0);
 document.getElementById('sinp').value=toISO(now);
 buildTL();buildProtos();buildWeek();renderJ();loadProf();
+updateCustomSchedule();
+// show custom panel if it was previously selected
+if(S.proto===99){const cp=document.getElementById('custom-panel');if(cp)cp.style.display='block';}
+// pre-fill actual start inputs with current time
+const nowISO=toISO(now);
+const cas=document.getElementById('custom-actual-start');
+const pas=document.getElementById('proto-actual-start');
+if(cas)cas.value=nowISO;
+if(pas)pas.value=nowISO;
+// wire up live preview on change
+if(cas)cas.addEventListener('input',()=>updateActualStartPreview('custom-actual-start','actual-start-preview'));
+if(pas)pas.addEventListener('input',()=>updateActualStartPreview('proto-actual-start','proto-start-preview'));
 S.start?showActive():showIdle();
 tick();setInterval(tick,1000);setInterval(rotateTip,11000);
 </script>
